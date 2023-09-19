@@ -89,7 +89,7 @@ while running:
     # TIMING: Pydirecinput takes about 0.10 - 0.11 seconds
         # pydirectinput.move(int(move_x), int(move_y), relative=True)
         ctypes.windll.user32.mouse_event(0x0001, int(move_x),int(move_y),0,0)
-        sleep(0.001)
+        sleep(0.01)
 
         elapsed_time = time() - start_time
         print(f"ELAPSED TIME: {elapsed_time}")
