@@ -43,3 +43,4 @@ typing_extensions==4.4.0
 tzdata==2023.3
 ultralytics==8.0.170
 urllib3==1.26.13
+numpy

@@ -7,12 +7,10 @@ from pynput import keyboard
 from datetime import datetime
 from ultralytics import YOLO
 import ctypes
-import pygetwindow as gw
-import pyautogui
-import mss
 from PIL import Image
-import dxcam
-
+from mss.windows import MSS as mss
+import numpy as np
+import cv2 as cv
 # get screenshot
 # wincap = WindowCapture('Apex Legends')
 
@@ -24,24 +22,25 @@ model = YOLO('models/200923_best_yolov8n.pt')
 running = True
 
 def get_results():
-    # window_title = "Apex Legends"
-    # window = gw.getWindowsWithTitle(window_title)
-    # window[0].activate()
+    with mss() as sct:
+        for num, monitor in enumerate(sct.monitors[1:], 1):
+            sct_img = sct.grab(monitor)
 
-    # screen_width, screen_height = pyautogui.size()
-    # center_x = screen_width // 2
-    # center_y = screen_height // 2
+            original_image = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
+            center_x = (original_image.width - 640) // 2
+            center_y = (original_image.height - 640) // 2
 
-    # region_x = center_x - 320  # Half of 640 (width)
-    # region_y = center_y - 320
+            # Define the region to extract
+            left = center_x
+            top = center_y
+            right = center_x + 640
+            bottom = center_y + 640
 
-    # screenshot = pyautogui.screenshot(region=(region_x, region_y, 640, 640))
-    
-    
-    camera = dxcam.create()
-    screenshot = camera.grab()
-    results = model(screenshot)
-    return results
+            center_region = original_image.crop((left, top, right, bottom))
+
+            results = model(center_region)
+
+            return results
 
 def update_global_variables(results):
     # global move_x, move_y
@@ -52,8 +51,8 @@ def update_global_variables(results):
         x_max = results[0].boxes.xyxy[0][2].item()
         y_max = results[0].boxes.xyxy[0][3].item()
         confidence = results[0].boxes.conf.item()
-        cls = results[0].boxes.cls
-
+        cls = model.names[int(results[0].boxes.cls)]
+        
         print(f"RAW BOX COORDINATES:{x_min, y_min, x_max, y_max}")
         print(f'CLASS DETECTED: {cls}')
 
@@ -75,15 +74,16 @@ def update_global_variables(results):
         move_x = (x_center_1920x1080 - 960) / 1.61
         move_y = (y_center_1920x1080 - 540) / 1.61
 
-        return move_x , move_y, confidence
+        return move_x , move_y, confidence, cls
     
     except:
         print("NO DETECTION - skipping")
         move_x = 0
         move_y = 0
         confidence = 0
+        cls = None
 
-    return move_x, move_y, confidence
+    return move_x, move_y, confidence, cls
 
 def on_delete_key(key):
     global running
@@ -97,24 +97,21 @@ delete_listener = keyboard.Listener(on_press=on_delete_key)
 delete_listener.start()
 
 while running:
+    # FULL TIMING AROUND 0.15 seconds
     start_time = time()
-    # TIMING: GET RESULTS TAKES ABOUT 0.16 - 0.20 seconds
     results = get_results()
     
-    elapsed_time = time() - start_time
-    print(f"ELAPSED TIME: {elapsed_time}")
-    
     # TIMING: 0.001 seconds update global variables
-    move_x , move_y, confidence = update_global_variables(results)  
+    move_x , move_y, confidence, cls = update_global_variables(results)  
 
-    if confidence >= 0.80:
-    # TIMING: Pydirecinput takes about 0.10 - 0.11 seconds
-        # pydirectinput.move(int(move_x), int(move_y), relative=True)
-        ctypes.windll.user32.mouse_event(0x0001, int(move_x),int(move_y),0,0)
-        sleep(0.01)
-
-        
-
-
+    if cls == 'avatar':
+        if confidence >= 0.65:
+            ctypes.windll.user32.mouse_event(0x0001, int(move_x),int(move_y),0,0)
+            sleep(0.01)
+            elapsed_time = time() - start_time
+            print(f"ELAPSED TIME: {elapsed_time}")
+    else:
+        pass
+    
 # Stop the delete key listener thread
 delete_listener.stop()
