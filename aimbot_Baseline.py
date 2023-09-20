@@ -7,10 +7,13 @@ from pynput import keyboard
 from datetime import datetime
 from ultralytics import YOLO
 import ctypes
-
+import pygetwindow as gw
+import pyautogui
+import mss
+from PIL import Image
 
 # get screenshot
-wincap = WindowCapture('Apex Legends')
+# wincap = WindowCapture('Apex Legends')
 
 # LOCAL MODEL
 # model = torch.hub.load('C:/Users/User/Desktop/python/no_recoil_apex/yolov5workspace/yolov5','custom', path='C:/Users/User/Desktop/python/no_recoil_apex/no_recoil_apex/models/best640x640.pt', force_reload=True,source='local')
@@ -20,9 +23,22 @@ model = YOLO('models/200923_best_yolov8n.pt')
 running = True
 
 def get_results():
-    screenshot = wincap.get_screenshot()
-    # img2 = screenshot.copy()
-    # cv.imwrite(f'{datetime.now()}.jpg', img2)
+    # window_title = "Apex Legends"
+    # window = gw.getWindowsWithTitle(window_title)
+    # window[0].activate()
+
+    # screen_width, screen_height = pyautogui.size()
+    # center_x = screen_width // 2
+    # center_y = screen_height // 2
+
+    # region_x = center_x - 320  # Half of 640 (width)
+    # region_y = center_y - 320
+
+    # screenshot = pyautogui.screenshot(region=(region_x, region_y, 640, 640))
+    
+    import dxcam
+    camera = dxcam.create()
+    screenshot = camera.grab()
     results = model(screenshot)
     return results
 
@@ -84,17 +100,19 @@ while running:
     # TIMING: GET RESULTS TAKES ABOUT 0.16 - 0.20 seconds
     results = get_results()
     
+    elapsed_time = time() - start_time
+    print(f"ELAPSED TIME: {elapsed_time}")
+    
     # TIMING: 0.001 seconds update global variables
     move_x , move_y, confidence = update_global_variables(results)  
 
-    if confidence >= 0.65:
+    if confidence >= 0.80:
     # TIMING: Pydirecinput takes about 0.10 - 0.11 seconds
         # pydirectinput.move(int(move_x), int(move_y), relative=True)
         ctypes.windll.user32.mouse_event(0x0001, int(move_x),int(move_y),0,0)
         sleep(0.01)
 
-        elapsed_time = time() - start_time
-        print(f"ELAPSED TIME: {elapsed_time}")
+        
 
 
 # Stop the delete key listener thread
