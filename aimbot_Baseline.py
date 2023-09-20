@@ -87,7 +87,7 @@ while running:
     # TIMING: 0.001 seconds update global variables
     move_x , move_y, confidence = update_global_variables(results)  
 
-    if confidence >= 0.83:
+    if confidence >= 0.65:
     # TIMING: Pydirecinput takes about 0.10 - 0.11 seconds
         # pydirectinput.move(int(move_x), int(move_y), relative=True)
         ctypes.windll.user32.mouse_event(0x0001, int(move_x),int(move_y),0,0)
