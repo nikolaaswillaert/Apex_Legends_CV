@@ -102,7 +102,7 @@ while running:
     move_x , move_y, confidence, cls = update_global_variables(results)  
 
     if cls == 'avatar':
-        if confidence >= 0.65:
+        if confidence >= 0.79:
             ctypes.windll.user32.mouse_event(0x0001, int(move_x),int(move_y),0,0)
             sleep(0.01)
             elapsed_time = time() - start_time
