@@ -15,10 +15,9 @@ wincap = WindowCapture('Apex Legends')
 # LOCAL MODEL
 # model = torch.hub.load('C:/Users/User/Desktop/python/no_recoil_apex/yolov5workspace/yolov5','custom', path='C:/Users/User/Desktop/python/no_recoil_apex/no_recoil_apex/models/best640x640.pt', force_reload=True,source='local')
 print("//// LOADING MODEL ////")
-model = YOLO('models/yolov8n_best.pt')
+model = YOLO('models/200923_best_yolov8n.pt')
 
 running = True
-
 
 def get_results():
     screenshot = wincap.get_screenshot()
@@ -36,7 +35,10 @@ def update_global_variables(results):
         x_max = results[0].boxes.xyxy[0][2].item()
         y_max = results[0].boxes.xyxy[0][3].item()
         confidence = results[0].boxes.conf.item()
+        cls = results[0].boxes.cls
+
         print(f"RAW BOX COORDINATES:{x_min, y_min, x_max, y_max}")
+        print(f'CLASS DETECTED: {cls}')
 
         print(f"CONFIDENCE: {confidence}")
 
