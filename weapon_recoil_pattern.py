@@ -2,7 +2,6 @@ from time import time
 import pydirectinput
 import random
 
-
 def weapon_r301(t):
     print(f"TIME: {time()}")
     time_elapsed = time() - t

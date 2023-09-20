@@ -11,6 +11,7 @@ import pygetwindow as gw
 import pyautogui
 import mss
 from PIL import Image
+import dxcam
 
 # get screenshot
 # wincap = WindowCapture('Apex Legends')
@@ -36,7 +37,7 @@ def get_results():
 
     # screenshot = pyautogui.screenshot(region=(region_x, region_y, 640, 640))
     
-    import dxcam
+    
     camera = dxcam.create()
     screenshot = camera.grab()
     results = model(screenshot)
