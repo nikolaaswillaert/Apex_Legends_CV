@@ -1,7 +1,7 @@
 from time import time, sleep
 from weapon_recoil_pattern import *
 # from windowcapture1920x1080 import WindowCapture
-from windowcapture640x640 import WindowCapture
+# from windowcapture640x640 import WindowCapture
 from roboflow import Roboflow
 from pynput import keyboard
 from datetime import datetime
@@ -11,11 +11,8 @@ from PIL import Image
 from mss.windows import MSS as mss
 import numpy as np
 import cv2 as cv
-# get screenshot
-# wincap = WindowCapture('Apex Legends')
 
 # LOCAL MODEL
-# model = torch.hub.load('C:/Users/User/Desktop/python/no_recoil_apex/yolov5workspace/yolov5','custom', path='C:/Users/User/Desktop/python/no_recoil_apex/no_recoil_apex/models/best640x640.pt', force_reload=True,source='local')
 print("//// LOADING MODEL ////")
 model = YOLO('models/200923_best_yolov8n.pt')
 
