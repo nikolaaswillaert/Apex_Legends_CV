@@ -11,9 +11,6 @@ from PIL import Image
 from mss.windows import MSS as mss
 import numpy as np
 import cv2 as cv
-from pynput import keyboard
-import ctypes
-import sys
 
 # LOCAL MODEL
 print("//// LOADING MODEL ////")
@@ -85,59 +82,34 @@ def update_global_variables(results):
 
     return move_x, move_y, confidence, cls
 
-# Global variable to track if the Caps Lock key is held down
-caps_lock_pressed = False
-
-# Function to handle Caps Lock key press event
-def on_caps_lock_press(key):
-    global caps_lock_pressed
-    if key == keyboard.Key.caps_lock:
-        caps_lock_pressed = True
-
-# Function to handle Caps Lock key release event
-def on_caps_lock_release(key):
-    global caps_lock_pressed
-    if key == keyboard.Key.caps_lock:
-        caps_lock_pressed = False
-
 def on_delete_key(key):
-    global delete_key_pressed
+    global running
     if key == keyboard.Key.delete:
-        delete_key_pressed = True
-        # You can also add code to print a message or perform other actions when the delete key is pressed.
-        print("Delete key pressed. Exiting...")
+        print("Delete key pressed. Stopping Script.")
+        running = False
+        return False
 
-# Start the Caps Lock listener thread
-caps_lock_listener = keyboard.Listener(
-    on_press=on_caps_lock_press,
-    on_release=on_caps_lock_release
-)
-caps_lock_listener.start()
-
-# Start the delete key listener thread
+# # Start the delete key listener thread
 delete_listener = keyboard.Listener(on_press=on_delete_key)
 delete_listener.start()
 
-while True:  # Run the main loop continuously
-    if delete_key_pressed:
-        # Exit the program if the delete key is pressed
-        sys.exit()
+while running:
+    # FULL TIMING AROUND 0.15 seconds
+    start_time = time()
 
-    if caps_lock_pressed:
-        # Your code here, only executed when Caps Lock is held down
-        start_time = time()
-        
-        results = get_results()        
-        move_x, move_y, confidence, cls = update_global_variables(results)
-        
-        if cls == 'avatar':
-            if confidence >= 0.50:
-                ctypes.windll.user32.mouse_event(0x0001, int(move_x), int(move_y), 0, 0)
-                sleep(0.01)
-                elapsed_time = time() - start_time
-                print(f"ELAPSED TIME: {elapsed_time}")
+    results = get_results()
+    
+    # TIMING: 0.001 seconds update global variables
+    move_x , move_y, confidence, cls = update_global_variables(results)  
 
-
-        
-
-
+    if cls == 'avatar':
+        if confidence >= 0.65:
+            ctypes.windll.user32.mouse_event(0x0001, int(move_x),int(move_y),0,0)
+            sleep(0.01)
+            elapsed_time = time() - start_time
+            print(f"ELAPSED TIME: {elapsed_time}")
+    else:
+        pass
+    
+# Stop the delete key listener thread
+delete_listener.stop()
