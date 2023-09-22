@@ -60,7 +60,6 @@ def move_mouse_down(t):
             if detected_weapon == 'RE45':
                 print("WEAPON SET TO RE45")
                 weapon_re45(t)
-
         random_time = random.uniform(0.001, 0.005)
         sleep(random_time)  # Add a small delay to prevent excessive loop iterations
     

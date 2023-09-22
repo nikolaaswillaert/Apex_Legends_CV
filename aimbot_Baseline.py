@@ -102,13 +102,12 @@ def on_caps_lock_release(key):
     if key == keyboard.Key.caps_lock:
         caps_lock_pressed = False
 
-def on_delete_key(key):
-    global delete_key_pressed
-    if key == keyboard.Key.delete:
-        delete_key_pressed = True
-        # You can also add code to print a message or perform other actions when the delete key is pressed.
-        print("Delete key pressed. Exiting...")
-
+# def on_delete_key(key):
+#     global delete_key_pressed
+#     if key == keyboard.Key.delete:
+#         delete_key_pressed = True
+#         # You can also add code to print a message or perform other actions when the delete key is pressed.
+#         print("Delete key pressed. Exiting...")
 
 def caps_lock_listener_thread():
     caps_lock_listener = keyboard.Listener(
@@ -118,24 +117,27 @@ def caps_lock_listener_thread():
     caps_lock_listener.start()
 
 # Start the delete key listener thread
-def delete_listener_thread():
-    delete_listener = keyboard.Listener(on_press=on_delete_key)
-    delete_listener.start()
+# def delete_listener_thread():
+#     delete_listener = keyboard.Listener(on_press=on_delete_key)
+#     delete_listener.start()
 
 # Create threads for listeners
 caps_lock_thread = threading.Thread(target=caps_lock_listener_thread)
-delete_thread = threading.Thread(target=delete_listener_thread)
+# delete_thread = threading.Thread(target=delete_listener_thread)
 
 # Start the listener threads
 caps_lock_thread.start()
-delete_thread.start()
+# delete_thread.start()
+
 
 while True:  # Run the main loop continuously
     if delete_key_pressed:
+        # delete_thread.join()
         # Exit the program if the delete key is pressed
         sys.exit()
 
     if caps_lock_pressed:
+        caps_lock_thread.join()
         # Your code here, only executed when Caps Lock is held down
         start_time = time()
         
@@ -144,9 +146,10 @@ while True:  # Run the main loop continuously
         move_x, move_y, confidence, cls = update_global_variables(results)
         
         if cls == 'avatar':
-            if confidence >= 0.40:
+            if confidence >= 0.42:
                 ctypes.windll.user32.mouse_event(0x0001, int(move_x), int(move_y), 0, 0)
-                sleep(0.01)
                 elapsed_time = time() - start_time
+                sleep(0.01)
                 print(f"ELAPSED TIME: {elapsed_time}")
-
+        else:
+            sleep(0.01)
