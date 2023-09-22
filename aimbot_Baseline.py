@@ -1,5 +1,5 @@
 from time import time, sleep
-from weapon_recoil_pattern import *
+# from utils.weapon_recoil_pattern import *
 # from windowcapture1920x1080 import WindowCapture
 # from windowcapture640x640 import WindowCapture
 from roboflow import Roboflow
@@ -16,11 +16,6 @@ import ctypes
 import sys
 import threading 
 
-# LOCAL MODEL
-print("//// LOADING MODEL ////")
-model = YOLO('models/200923_best_yolov8n.pt')
-
-running = True
 
 def get_results():
     with mss() as sct:
@@ -102,12 +97,6 @@ def on_caps_lock_release(key):
     if key == keyboard.Key.caps_lock:
         caps_lock_pressed = False
 
-# def on_delete_key(key):
-#     global delete_key_pressed
-#     if key == keyboard.Key.delete:
-#         delete_key_pressed = True
-#         # You can also add code to print a message or perform other actions when the delete key is pressed.
-#         print("Delete key pressed. Exiting...")
 
 def caps_lock_listener_thread():
     caps_lock_listener = keyboard.Listener(
@@ -116,40 +105,40 @@ def caps_lock_listener_thread():
     )
     caps_lock_listener.start()
 
-# Start the delete key listener thread
-# def delete_listener_thread():
-#     delete_listener = keyboard.Listener(on_press=on_delete_key)
-#     delete_listener.start()
+def stop_aimbot():
+    global running
+    running = False
 
 # Create threads for listeners
 caps_lock_thread = threading.Thread(target=caps_lock_listener_thread)
-# delete_thread = threading.Thread(target=delete_listener_thread)
 
 # Start the listener threads
 caps_lock_thread.start()
-# delete_thread.start()
 
 
-while True:  # Run the main loop continuously
-    if delete_key_pressed:
-        # delete_thread.join()
-        # Exit the program if the delete key is pressed
-        sys.exit()
+if __name__ == '__main__':
+    # LOCAL MODEL
+    print("//// LOADING MODEL ////")
+    model = YOLO('models/200923_best_yolov8n.pt')
 
-    if caps_lock_pressed:
-        caps_lock_thread.join()
-        # Your code here, only executed when Caps Lock is held down
-        start_time = time()
-        
-        # Assuming you have defined get_results() and update_global_variables() functions
-        results = get_results()        
-        move_x, move_y, confidence, cls = update_global_variables(results)
-        
-        if cls == 'avatar':
-            if confidence >= 0.42:
-                ctypes.windll.user32.mouse_event(0x0001, int(move_x), int(move_y), 0, 0)
-                elapsed_time = time() - start_time
+    running = True
+
+    while running:  # Run the main loop continuously
+        if caps_lock_pressed:
+            caps_lock_thread.join()
+            # Your code here, only executed when Caps Lock is held down
+            start_time = time()
+            
+            # Assuming you have defined get_results() and update_global_variables() functions
+            results = get_results()        
+            move_x, move_y, confidence, cls = update_global_variables(results)
+            
+            if cls == 'avatar':
+                if confidence >= 0.42:
+                    ctypes.windll.user32.mouse_event(0x0001, int(move_x), int(move_y), 0, 0)
+                    elapsed_time = time() - start_time
+                    sleep(0.01)
+                    print(f"ELAPSED TIME: {elapsed_time}")
+            else:
                 sleep(0.01)
-                print(f"ELAPSED TIME: {elapsed_time}")
-        else:
-            sleep(0.01)
+

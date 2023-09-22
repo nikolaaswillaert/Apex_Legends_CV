@@ -3,13 +3,13 @@ import threading
 from time import time, sleep
 import pydirectinput
 import random
-from weapon_recoil_pattern import *
-from windowcapture1920x1080 import WindowCapture
-from imagedetect import detect_what_weapon
+from utils.weapon_recoil_pattern import *
+from utils.windowcapture1920x1080 import WindowCapture
+from utils.imagedetect import detect_what_weapon
 
 # in game Sensitivity = 1.61
 
-# Global variables
+# Global variables  
 global detected_weapon
 detected_weapon = detect_what_weapon()
 

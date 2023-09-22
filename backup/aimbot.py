@@ -1,8 +1,8 @@
 from time import time, sleep
 import cv2 as cv
-from weapon_recoil_pattern import *
+from utils.weapon_recoil_pattern import *
 # from windowcapture1920x1080 import WindowCapture
-from windowcapture640x640 import WindowCapture
+from utils.windowcapture640x640 import WindowCapture
 from roboflow import Roboflow
 import pydirectinput
 import pyautogui

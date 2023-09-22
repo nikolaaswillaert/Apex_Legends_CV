@@ -1,5 +1,5 @@
 from time import time, sleep
-from weapon_recoil_pattern import *
+from utils.weapon_recoil_pattern import *
 # from windowcapture1920x1080 import WindowCapture
 # from windowcapture640x640 import WindowCapture
 from roboflow import Roboflow
