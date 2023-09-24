@@ -16,6 +16,8 @@ import ctypes
 import sys
 import threading 
 
+print("//// LOADING MODEL ////")
+model = YOLO('models/200923_best_yolov8n.pt')
 
 def get_results():
     with mss() as sct:
@@ -109,17 +111,14 @@ def stop_aimbot():
     global running
     running = False
 
-# Create threads for listeners
-caps_lock_thread = threading.Thread(target=caps_lock_listener_thread)
+def mainloop():
+    detect_param = sys.argv[1]
 
-# Start the listener threads
-caps_lock_thread.start()
+    # Create threads for listeners
+    caps_lock_thread = threading.Thread(target=caps_lock_listener_thread)
 
-
-if __name__ == '__main__':
-    # LOCAL MODEL
-    print("//// LOADING MODEL ////")
-    model = YOLO('models/200923_best_yolov8n.pt')
+    # Start the listener threads
+    caps_lock_thread.start()
 
     running = True
 
@@ -134,7 +133,7 @@ if __name__ == '__main__':
             move_x, move_y, confidence, cls = update_global_variables(results)
             
             if cls == 'avatar':
-                if confidence >= 0.42:
+                if confidence >= f"{detect_param}":
                     ctypes.windll.user32.mouse_event(0x0001, int(move_x), int(move_y), 0, 0)
                     elapsed_time = time() - start_time
                     sleep(0.01)
@@ -142,3 +141,5 @@ if __name__ == '__main__':
             else:
                 sleep(0.01)
 
+mainloop()
+sys.exit()
