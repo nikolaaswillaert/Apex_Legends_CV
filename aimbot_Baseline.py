@@ -57,7 +57,7 @@ def update_global_variables(results):
         print(f"CONFIDENCE: {confidence}")
 
         x_center = (x_min + x_max) / 2
-        y_center = y_min + 0.2 * (y_max - y_min)
+        y_center = y_min + 0.1 * (y_max - y_min)
         box_center = (x_center, y_center)
         print(f"Center of box coordinates on 640 x 640 image:{box_center}")
         
@@ -111,8 +111,12 @@ def stop_aimbot():
     global running
     running = False
 
+
 def mainloop():
-    detect_param = sys.argv[1]
+    try:
+        detect_param = float(sys.argv[1])
+    except:
+        detect_param = 0.45
 
     # Create threads for listeners
     caps_lock_thread = threading.Thread(target=caps_lock_listener_thread)
@@ -122,24 +126,34 @@ def mainloop():
 
     running = True
 
+    previous_frame_time = 0
+    fps_elapsed_time = 0
+    
     while running:  # Run the main loop continuously
         if caps_lock_pressed:
+            
+            fps_elapsed_time = time() - previous_frame_time
+
             caps_lock_thread.join()
             # Your code here, only executed when Caps Lock is held down
             start_time = time()
-            
+                
             # Assuming you have defined get_results() and update_global_variables() functions
             results = get_results()        
             move_x, move_y, confidence, cls = update_global_variables(results)
-            
+                
             if cls == 'avatar':
-                if confidence >= f"{detect_param}":
+                if confidence == None:
+                    pass
+                elif confidence >= detect_param:
                     ctypes.windll.user32.mouse_event(0x0001, int(move_x), int(move_y), 0, 0)
                     elapsed_time = time() - start_time
                     sleep(0.01)
                     print(f"ELAPSED TIME: {elapsed_time}")
+                    print(f"FPS: {round(1/elapsed_time)}")
             else:
-                sleep(0.01)
+                sleep(0.00001)
+
 
 mainloop()
 sys.exit()

@@ -35,12 +35,12 @@ def stop_nr_script():
 
 def slider_event(self):
     global detection_value
-    detection_value = round(slider.get(),2)
+    detection_value = round(float(slider.get()),2)
     current_value_label.configure(text=f"Object Detection Parameter: {slider.get():.2f}")
 
 window = ctk.CTk()
 window.title('APEX SCRIPT HUB')
-window.geometry('700x650')
+window.geometry('750x500')
 
 ctk.set_appearance_mode('dark')
 

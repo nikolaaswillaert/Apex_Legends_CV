@@ -30,5 +30,4 @@ def detect_what_weapon():
             print(f"DETECTED: {detected_weapon}")
             return detected_weapon
         else:
-            print('===============')
-            print(f'not detected: {weapon}')
+            pass
