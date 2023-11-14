@@ -6,7 +6,7 @@ The ***aimbot script*** detects apex legends enemies and moves the mouse automat
 The ***no-recoil script*** detects what weapon is selected, everytime the user changes weapons, this will be detected and a new recoil pattern will be loaded in (to activate the no-recoil both left-click and right-click should be held down)
 
 
-** :loudspeaker: Important note:** This project has not been tested and should **not** be used on populated (online) servers and will only work on the training grounds of the game.
+**:loudspeaker: Important note:** This project has not been tested and should **not** be used on populated (online) servers and will only work on the training grounds of the game.
 
 ## :wrench: Installation
 
