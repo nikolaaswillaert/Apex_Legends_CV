@@ -26,3 +26,4 @@ Make sure the Apex Legends application is called 'Apex Legends' (this should be 
 ## Demo
 <br>
 
+![Alt text](images/demo.gif)
