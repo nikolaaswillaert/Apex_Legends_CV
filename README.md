@@ -29,3 +29,5 @@ Make sure the Apex Legends application is called 'Apex Legends' (this should be 
 <video controls="" width="800" height="500" muted="" loop="" autoplay="">
 <source src="images/demo.mp4" type="video/mp4">
 </video>
+<br>
+<video src="demo1.mp4" controls title="Title"></video>
