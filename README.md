@@ -18,10 +18,10 @@ This code will start the Graphical User interface where the user can interact wi
 
     python3 GUI.py
 
-![Alt text](GUI.jpg)
+![Alt text](images/GUI.jpg)
 
 Make sure the Apex Legends application is called 'Apex Legends' (this should be the default application name when launched) <br>
 <br>
 
 ## Demo
-<video src="Apex%20Legends%202023-10-03%2017-42-00.mp4" controls title="Title"></video>
+<video src="images/Apex%20Legends%202023-10-03%2017-42-00.mp4" controls title="Title"></video>
