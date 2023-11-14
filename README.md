@@ -24,4 +24,6 @@ Make sure the Apex Legends application is called 'Apex Legends' (this should be 
 <br>
 
 ## Demo
-<video src="images/Apex%20Legends%202023-10-03%2017-42-00.mp4" controls title="Title"></video>
+<br>
+
+<video src="images/demo.mp4" controls title="Title"></video>
