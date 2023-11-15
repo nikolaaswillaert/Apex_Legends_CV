@@ -112,3 +112,4 @@ slider.grid(row=2, column=0, padx=20, pady=20, columnspan=2)
 current_value_label.grid(row=3, column=0, columnspan=2)
 
 window.mainloop()
+# 
